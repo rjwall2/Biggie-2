@@ -14,6 +14,7 @@ public class Gui implements ActionListener {
     int turn = 1;
     JFrame welcomeFrame;
     JFrame playMenu;
+    JFrame transitionFrame;
 
     JPanel currentStatePanel;
     JPanel yourCardsPanel;
@@ -27,6 +28,10 @@ public class Gui implements ActionListener {
     //Card testCard;
     ImageIcon Gamelogo = new ImageIcon("./data/Game_icon3.png");
     ImageIcon startDoggoIcon = new ImageIcon("./data/Game_icon2.jpg");
+    ImageIcon checkDoggoIcon = new ImageIcon("./data/Game_icon4.png");
+    ImageIcon passDoggo = new ImageIcon("./data/Game_icon5.png");
+
+    ImageIcon victoryDoggo = new ImageIcon("./data/Game_icon.jpg");
 
     public Gui(){
         welcomeMenu();
@@ -118,6 +123,41 @@ public class Gui implements ActionListener {
         playMenu.add(functionSelectionPanal);
     }
 
+    public void transitionScreen( String message, ImageIcon doggoPicture, String command){
+
+        CardButton checkDoggoButton = new CardButton(); // cardButton class is working, even with test card
+        checkDoggoButton.setBounds(175,30,250,250);
+        checkDoggoButton.setIcon(fitIconToButton(doggoPicture,checkDoggoButton.getWidth(),checkDoggoButton.getHeight()));
+        //startDoggoButton.setBorder();
+        checkDoggoButton.setActionCommand(command); //sets how the action listener will identify the button
+        checkDoggoButton.addActionListener(this);
+
+        JLabel checkLabel = new JLabel(); //initialize new jlabel
+        checkLabel.setText(message); //adds text to jlabel
+        checkLabel.setFont(new Font("SimSun", Font.PLAIN,20)); //changes font of jlabel
+        checkLabel.setVerticalAlignment(JLabel.CENTER); //sets where text & image will be within jlabel
+        checkLabel.setHorizontalAlignment(JLabel.CENTER); // '' ''
+        //welcomeLabel.setBorder(testborder); // used to visualize where label is in frame, removed after use
+        checkLabel.setBounds(50,300,500,100); // manually set where label is within frame, and label dimensions
+
+        JPanel switchPanel = new JPanel();
+        switchPanel.setLayout(null); // need this to manually move button
+        switchPanel.setBackground(new Color (255,231,193)); // changes color of panel, used to visualize panel, commented out after use
+        switchPanel.setBounds(0,0,600,300);
+        switchPanel.add(checkDoggoButton);
+
+        transitionFrame = new JFrame();
+        transitionFrame.setSize(600,450);
+        transitionFrame.setLocationRelativeTo(null);
+        transitionFrame.setResizable(false);
+        transitionFrame.setLayout(null);
+        transitionFrame.add(checkLabel);
+        transitionFrame.add(switchPanel);
+        transitionFrame.setIconImage(Gamelogo.getImage());
+        transitionFrame.setUndecorated(true);
+        transitionFrame.setVisible(true);
+    }
+
     public ImageIcon fitIconToButton(ImageIcon icon, int Width, int Height) {
         Image img = icon.getImage();
         Image resizedImage = img.getScaledInstance(Width, Height, java.awt.Image.SCALE_SMOOTH);
@@ -185,10 +225,11 @@ public class Gui implements ActionListener {
             if(currentPlayingDeck.getDeckComposition().isEmpty()||currentPlayingDeck.fightOutcome(attackDeck)) {
                 currentPlayingDeck.clearDeck();
                 currentPlayingDeck.overhaulDeckComp(attackDeck.getDeckComposition());
+                transitionScreen("<html>Hi! I'm the no cheating guard dog. Hand the device to the other player, and give me a pet (click) once you're done. (I'm watching you:3) <html>",
+                        checkDoggoIcon, "switchplayer");
                 switchTurn();
                 attackDeck.clearDeck();
-
-
+                victoryCheck();
             }
         }
     }
@@ -212,17 +253,29 @@ public class Gui implements ActionListener {
         }
     }
 
-//    public void removePlayedCards(Deck attackDeck){
-//        for (Card c: attackDeck.getDeckComposition()){
-//            this.removeCard()
-//        }
-//    }
+    public void passTurn(){
+        transitionScreen("<html>You could not beat your opponent's attack:( Hand the device to the other player, and give me a pet (click) once you're done! <html>", passDoggo, "switchplayer");
+        currentPlayingDeck.clearDeck();
+        attackDeck.clearDeck();
+        switchTurn();
+    }
+
+    public void victoryCheck(){
+        if (playerOneDeck.getDeckComposition().isEmpty()){
+            transitionScreen("<html>Congratulations player 1, you've won! You deserve some treats now! Give me a pet (click) when you want to leave, play again soon!<html>", victoryDoggo, "endgame");
+        }
+        if (playerTwoDeck.getDeckComposition().isEmpty()){
+            transitionScreen("<html>Congratulations player 1, you've won! You deserve some treats now! Give me a pet (click) when you want to leave, play again soon!<html>", victoryDoggo,"endgame");
+        }
+    }
+
 
     // sort of like a jump table for button events
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("startNewGame")) {
             initializeGame();
+            welcomeFrame.dispose();
         } else if (e.getActionCommand().equals ("cardClick")){
             CardButton cardclicked = (CardButton) e.getSource();
             modifyAttackdeck(cardclicked);
@@ -231,7 +284,11 @@ public class Gui implements ActionListener {
         } else if (e.getActionCommand().equals("execute")){
             executeAttack();
         } else if (e.getActionCommand().equals("pass")){
-            //passTurn();
+            passTurn();
+        }else if (e.getActionCommand().equals("switchplayer")){
+            transitionFrame.dispose();
+        }else if(e.getActionCommand().equals("endgame")){
+            System.exit(0);
         }
     }
 }
