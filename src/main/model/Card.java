@@ -54,6 +54,27 @@ public class Card {
         return valuePriority;
     }
 
+    //override allows child class to provide a particular implementation of a method declared by the parents
+    @Override
+    public boolean equals(Object o){
+        if (this == o){ //case if both objects are same instance
+            return true;
+        }
+        if( o == null || this == null){ //case if either objects are null
+            return false;
+        }
+        if (this.getClass() != o.getClass()){ //case if objects are different classes
+            return false;
+        }
+        Card object = (Card) o;
+
+        if(this.value == object.value && this.suitValue == object.suitValue){ // case where both objects are clones
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
 //    //EFFECTS: returns true if card is stronger suit than c, else false
 //    public Boolean isSuitGreater(Card c){

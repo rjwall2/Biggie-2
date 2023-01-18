@@ -16,4 +16,8 @@ public class CardButton extends JButton {
         card = c;
     }
 
+    public Card getButtonsCard(){
+        return this.card;
+    }
+
 }

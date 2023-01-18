@@ -11,15 +11,18 @@ import java.awt.event.ActionListener;
 
 public class Gui implements ActionListener {
 
+    int turn = 1;
     JFrame welcomeFrame;
     JFrame playMenu;
 
     JPanel currentStatePanel;
     JPanel yourCardsPanel;
+    JPanel functionSelectionPanal;
 
     Deck playerOneDeck;
     Deck playerTwoDeck;
     Deck currentPlayingDeck;
+    Deck attackDeck;
 
     //Card testCard;
     ImageIcon Gamelogo = new ImageIcon("./data/Game_icon3.png");
@@ -76,21 +79,33 @@ public class Gui implements ActionListener {
 
     private void activePlayScreen(){
 
-        JPanel currentStatePanel = new JPanel();
+        currentStatePanel = new JPanel();
         //currentStatePanel.setLayout(null); // need this to manually move button
         currentStatePanel.setBackground(new Color (85,145,95)); // changes color of panel, used to visualize panel, commented out after use
         currentStatePanel.setBounds(0,0,600,200);
+        //currentStatePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JPanel yourCardsPanel = new JPanel();
+        yourCardsPanel = new JPanel();
         yourCardsPanel.setBounds(0,200,600,150);
         yourCardsPanel.setBackground(new Color(20,34,50));
-        addDeckToPanal(yourCardsPanel,playerOneDeck);
+        //addDeckToPanal(yourCardsPanel,playerOneDeck);
 
-        JPanel functionSelectionPanal = new JPanel();
+        functionSelectionPanal = new JPanel();
         functionSelectionPanal.setBounds(0,350,600,100);
+        JButton resetAttackButton = new JButton ("Reset Attack");
+        resetAttackButton.setActionCommand("reset");
+        resetAttackButton.addActionListener(this);
+        JButton executeAttackButton = new JButton ("Execute Attack");
+        executeAttackButton.setActionCommand("execute");
+        executeAttackButton.addActionListener(this);
+        JButton passButton = new JButton("Pass");
+        passButton.setActionCommand("pass");
+        passButton.addActionListener(this);
+        functionSelectionPanal.add(resetAttackButton);
+        functionSelectionPanal.add(executeAttackButton);
+        functionSelectionPanal.add(passButton);
 
-
-        playMenu = new JFrame("Make your move");
+        playMenu = new JFrame("Make your move!");
         playMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         playMenu.setSize(600,450);
         playMenu.setLocationRelativeTo(null);
@@ -110,6 +125,7 @@ public class Gui implements ActionListener {
     }
 
     public void addDeckToPanal(JPanel j, Deck d){
+        cleanJPanel(j);
         for (Card c: d.getDeckComposition()){
             CardButton cardb = new CardButton(c);
             cardb.setSize(40,57);
@@ -117,6 +133,8 @@ public class Gui implements ActionListener {
             cardb.setOpaque(false);
             cardb.setContentAreaFilled(false);
             cardb.setBorderPainted(false);
+            cardb.setActionCommand("cardClick");
+            cardb.addActionListener(this);
             j.add(cardb);
 
         }
@@ -124,6 +142,7 @@ public class Gui implements ActionListener {
 
     public void initializeDecks(){
         currentPlayingDeck = new Deck();
+        attackDeck = new Deck ();
         Deck originalDeck = new Deck();
         for (int val = 1; val <= 13; val++){
             for (int suit = 1; suit <=4; suit++){
@@ -141,18 +160,80 @@ public class Gui implements ActionListener {
 
     public void initializeGame(){
         initializeDecks();
-
         activePlayScreen();
-
-
+        addDeckToPanal(yourCardsPanel,playerOneDeck);
+        yourCardsPanel.revalidate();
 
     }
+
+    public void modifyAttackdeck(CardButton b){
+        attackDeck.addCard(b.getButtonsCard());
+        b.setEnabled(false);
+    }
+
+    public void resetAttack(){
+        attackDeck.clearDeck();
+        if(turn == 1) {
+            addDeckToPanal(yourCardsPanel, playerOneDeck);
+        } else{
+            addDeckToPanal(yourCardsPanel, playerTwoDeck);
+        }
+    }
+
+    public void executeAttack(){
+        if((attackDeck.checkValueConsistent() && (attackDeck.checkDecksSameSize(currentPlayingDeck)||currentPlayingDeck.getDeckComposition().isEmpty()))) {
+            if(currentPlayingDeck.getDeckComposition().isEmpty()||currentPlayingDeck.fightOutcome(attackDeck)) {
+                currentPlayingDeck.clearDeck();
+                currentPlayingDeck.overhaulDeckComp(attackDeck.getDeckComposition());
+                switchTurn();
+                attackDeck.clearDeck();
+
+
+            }
+        }
+    }
+
+    public void cleanJPanel(JPanel j){
+        j.removeAll();
+        j.revalidate();
+        j.repaint();
+    }
+    public void switchTurn(){
+        if(turn == 1){
+            turn = 2;
+            playerOneDeck.removePlayedCards(attackDeck);
+            addDeckToPanal(currentStatePanel,currentPlayingDeck);
+            addDeckToPanal(yourCardsPanel,playerTwoDeck);
+        }else {
+            turn = 1;
+            playerTwoDeck.removePlayedCards(attackDeck);
+            addDeckToPanal(currentStatePanel,currentPlayingDeck);
+            addDeckToPanal(yourCardsPanel,playerOneDeck);
+        }
+    }
+
+//    public void removePlayedCards(Deck attackDeck){
+//        for (Card c: attackDeck.getDeckComposition()){
+//            this.removeCard()
+//        }
+//    }
 
     // sort of like a jump table for button events
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("startNewGame")) {
             initializeGame();
+        } else if (e.getActionCommand().equals ("cardClick")){
+            CardButton cardclicked = (CardButton) e.getSource();
+            modifyAttackdeck(cardclicked);
+        } else if (e.getActionCommand().equals("reset")){
+            resetAttack();
+        } else if (e.getActionCommand().equals("execute")){
+            executeAttack();
+        } else if (e.getActionCommand().equals("pass")){
+            //passTurn();
         }
     }
 }
+
+//disable button after click

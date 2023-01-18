@@ -30,8 +30,10 @@ public class Deck {
     //REQUIRES: c must be a card already contained in the deck
     //MODIFIES: this
     //EFFECTS: removes a card from a deck
-    public void removeCard(Card c){
-        deckComposition.remove(c);
+    public void removePlayedCards(Deck d){
+        for (Card c: d.getDeckComposition()){
+            this.deckComposition.remove(c);
+        }
     }
 
 
@@ -69,27 +71,23 @@ public class Deck {
         }
     }
 
-    //EFFECTS: determines which deck wins a dual following the rules of big2
-    public Deck fightOutcome (Deck d){
-        int deckValue1 = this.deckComposition.get(0).getValuePriority();
-        int deckValue2 = d.deckComposition.get(0).getValuePriority();
+    //EFFECTS: returns false if currentPlayingDeck(this) wins, returns true if attackDeck(d) wins
+    public Boolean fightOutcome (Deck d){
+        int currDeck = this.deckComposition.get(0).getValuePriority();
+        int attackDeck = d.deckComposition.get(0).getValuePriority();
 
-        if (deckValue1 == deckValue2){
+        if (currDeck == attackDeck){
             if(this.getDecksHighestSuit()>d.getDecksHighestSuit()){
-                return this;
+                return false;
             }else{
-                return d;
+                return true;
             }
-
         }
-
-        if (deckValue1 > deckValue2){
-            return this;
+        if (currDeck > attackDeck){
+            return false;
         } else{
-            return d;
+            return true;
         }
-
-
     }
 
     public void randomizeDeck(){
@@ -103,5 +101,9 @@ public class Deck {
 
     public void overhaulDeckComp(List<Card> lc){
         this.deckComposition.addAll(lc);
+    }
+
+    public void clearDeck(){
+        this.deckComposition.clear();
     }
 }
