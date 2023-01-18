@@ -40,25 +40,17 @@ public class Gui implements ActionListener {
     //EFFECTS: creates the first menu page when starting program, with a button to start a game
     private void welcomeMenu(){
 
-        //Card testCard = new Card(10,3);
         CardButton startDoggoButton = new CardButton(); // cardButton class is working, even with test card
         startDoggoButton.setBounds(175,30,250,250);
         startDoggoButton.setIcon(fitIconToButton(startDoggoIcon,startDoggoButton.getWidth(),startDoggoButton.getHeight()));
-        //startDoggoButton.setBorder();
         startDoggoButton.setActionCommand("startNewGame"); //sets how the action listener will identify the button
         startDoggoButton.addActionListener(this); //addActionListener ensures the button is included in the tracked events of the listener. "this" refers to the class object, in this case the gui.
-
-        //Border testborder = BorderFactory.createLineBorder(Color.blue,2);
-
-
-
 
         JLabel welcomeLabel = new JLabel(); //initialize new jlabel
         welcomeLabel.setText("Welcome to Biggie2, click the dog above to begin!"); //adds text to jlabel
         welcomeLabel.setFont(new Font("SimSun", Font.PLAIN,20)); //changes font of jlabel
         welcomeLabel.setVerticalAlignment(JLabel.CENTER); //sets where text & image will be within jlabel
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER); // '' ''
-        //welcomeLabel.setBorder(testborder); // used to visualize where label is in frame, removed after use
         welcomeLabel.setBounds(50,300,500,100); // manually set where label is within frame, and label dimensions
 
         JPanel welcomePanel = new JPanel();
@@ -84,19 +76,6 @@ public class Gui implements ActionListener {
 
     private void activePlayScreen(){
 
-        currentStatePanel = new JPanel();
-        //currentStatePanel.setLayout(null); // need this to manually move button
-        currentStatePanel.setBackground(new Color (85,145,95)); // changes color of panel, used to visualize panel, commented out after use
-        currentStatePanel.setBounds(0,0,600,200);
-        //currentStatePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        yourCardsPanel = new JPanel();
-        yourCardsPanel.setBounds(0,200,600,150);
-        yourCardsPanel.setBackground(new Color(20,34,50));
-        //addDeckToPanal(yourCardsPanel,playerOneDeck);
-
-        functionSelectionPanal = new JPanel();
-        functionSelectionPanal.setBounds(0,350,600,100);
         JButton resetAttackButton = new JButton ("Reset Attack");
         resetAttackButton.setActionCommand("reset");
         resetAttackButton.addActionListener(this);
@@ -106,6 +85,17 @@ public class Gui implements ActionListener {
         JButton passButton = new JButton("Pass");
         passButton.setActionCommand("pass");
         passButton.addActionListener(this);
+
+        currentStatePanel = new JPanel();
+        currentStatePanel.setBackground(new Color (85,145,95)); // changes color of panel, used to visualize panel, commented out after use
+        currentStatePanel.setBounds(0,0,600,200);
+
+        yourCardsPanel = new JPanel();
+        yourCardsPanel.setBounds(0,200,600,150);
+        yourCardsPanel.setBackground(new Color(20,34,50));
+
+        functionSelectionPanal = new JPanel();
+        functionSelectionPanal.setBounds(0,350,600,100);
         functionSelectionPanal.add(resetAttackButton);
         functionSelectionPanal.add(executeAttackButton);
         functionSelectionPanal.add(passButton);
@@ -128,7 +118,6 @@ public class Gui implements ActionListener {
         CardButton checkDoggoButton = new CardButton(); // cardButton class is working, even with test card
         checkDoggoButton.setBounds(175,30,250,250);
         checkDoggoButton.setIcon(fitIconToButton(doggoPicture,checkDoggoButton.getWidth(),checkDoggoButton.getHeight()));
-        //startDoggoButton.setBorder();
         checkDoggoButton.setActionCommand(command); //sets how the action listener will identify the button
         checkDoggoButton.addActionListener(this);
 
@@ -137,7 +126,6 @@ public class Gui implements ActionListener {
         checkLabel.setFont(new Font("SimSun", Font.PLAIN,20)); //changes font of jlabel
         checkLabel.setVerticalAlignment(JLabel.CENTER); //sets where text & image will be within jlabel
         checkLabel.setHorizontalAlignment(JLabel.CENTER); // '' ''
-        //welcomeLabel.setBorder(testborder); // used to visualize where label is in frame, removed after use
         checkLabel.setBounds(50,300,500,100); // manually set where label is within frame, and label dimensions
 
         JPanel switchPanel = new JPanel();
@@ -292,5 +280,3 @@ public class Gui implements ActionListener {
         }
     }
 }
-
-//disable button after click

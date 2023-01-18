@@ -74,21 +74,4 @@ public class Card {
             return false;
         }
     }
-
-
-//    //EFFECTS: returns true if card is stronger suit than c, else false
-//    public Boolean isSuitGreater(Card c){
-//        return suitValue>c.getSuitValue();
-//    }
-
-//    //EFFECTS: used to determine outcome when only one
-//    public Boolean singlesOutcome(Card c){
-//        if(isSuitGreater(c) && this.valuePriority == c.valuePriority){
-//            return true;
-//        } else if (this.valuePriority > c.valuePriority){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
 }

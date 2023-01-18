@@ -108,15 +108,15 @@ class DeckTest {
         testDeck2.addCard(testCard2);
         testDeck2.addCard(testCard5);
 
-        assertEquals(testDeck2, testDeck.fightOutcome(testDeck2));
-        assertEquals(testDeck2, testDeck2.fightOutcome(testDeck));
+        assertTrue(testDeck.fightOutcome(testDeck2));
+        assertFalse(testDeck2.fightOutcome(testDeck));
 
         testDeck2.removeCard(testCard5);
         testDeck2.removeCard(testCard2);
         testDeck2.addCard(testCard4);
         testDeck2.addCard(testCard6);
 
-        assertEquals(testDeck2, testDeck.fightOutcome(testDeck2));
-        assertEquals(testDeck2, testDeck2.fightOutcome(testDeck));
+        assertTrue(testDeck.fightOutcome(testDeck2));
+        assertFalse(testDeck2.fightOutcome(testDeck));
     }
 }

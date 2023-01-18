@@ -26,12 +26,15 @@ public class Deck {
         deckComposition.add(c);
     }
 
+    public void removeCard(Card c){
+        this.deckComposition.remove(c);
+    }
 
     //REQUIRES: c must be a card already contained in the deck
     //MODIFIES: this
-    //EFFECTS: removes a card from a deck
-    public void removePlayedCards(Deck d){
-        for (Card c: d.getDeckComposition()){
+    //EFFECTS: removes the cards in a deck from another deck
+    public void removePlayedCards(Deck d) {
+        for (Card c : d.getDeckComposition()) {
             this.deckComposition.remove(c);
         }
     }
